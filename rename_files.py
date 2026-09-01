@@ -1,3 +1,4 @@
+import argparse
 from pathlib import Path
 
 def list_files(folder_path):
@@ -26,10 +27,16 @@ def rename_file(file_path, new_name):
         return False
 
 if __name__ == "__main__":
-    files = list_files("test_folder")
+    parser = argparse.ArgumentParser(description="Bulk rename files in a folder by adding a prefix.")
+    parser.add_argument("--folder", required=True, help="Path to the folder containing files to rename")
+    parser.add_argument("--prefix", required=True, help="Text to add to the front of each filename")
+
+    args = parser.parse_args()
+
+    files = list_files(args.folder)
 
     for f in files:
-        new_name = build_new_name(f, "vacation_")
+        new_name = build_new_name(f, args.prefix)
         success = rename_file(f, new_name)
         if success:
             print(f"Renamed {f.name} -> {new_name}")
