@@ -28,17 +28,23 @@ def rename_file(file_path, new_name):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Bulk rename files in a folder by adding a prefix.")
+    
     parser.add_argument("--folder", required=True, help="Path to the folder containing files to rename")
+    
     parser.add_argument("--prefix", required=True, help="Text to add to the front of each filename")
-
+    
+    parser.add_argument("--dry-run", action="store_true", help="Preview renames without actually changing any files")
     args = parser.parse_args()
 
     files = list_files(args.folder)
 
     for f in files:
         new_name = build_new_name(f, args.prefix)
-        success = rename_file(f, new_name)
-        if success:
-            print(f"Renamed {f.name} -> {new_name}")
-        
+
+        if args.dry_run:
+            print(f"[DRY RUN] Would rename: {f.name} -> {new_name}")
+        else:
+            success = rename_file(f, new_name)
+            if success:
+                print(f"Renamed {f.name} -> {new_name}")
 
